@@ -52,6 +52,7 @@ export function createAppController({
   function handleAction(event) {
     const control = event.target.closest?.("[data-action]");
     if (!control) return state;
+    if (event.type === "click" && control.matches?.("select")) return state;
     if (event.type === "submit") event.preventDefault();
     const action = control.dataset.action;
     const identity = focusIdentity(control);
