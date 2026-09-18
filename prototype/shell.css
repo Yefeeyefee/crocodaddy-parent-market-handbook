@@ -1,0 +1,13 @@
+* { box-sizing: border-box; }
+html, body { margin: 0; min-height: 100%; }
+body { color: var(--ink); background: #e4e8e0; font-family: var(--font-sans); font-size: 15px; }
+button, input { font: inherit; } button { cursor: pointer; }
+.prototype-stage { min-height: 100vh; display: grid; grid-template-columns: minmax(320px, 1fr) minmax(430px, 430px) minmax(280px, 300px); align-items: center; gap: 28px; padding: 32px clamp(20px, 4vw, 56px); }
+.product-doc-panel { width: 100%; max-height: min(860px, calc(100vh - 64px)); overflow: auto; border: 1px solid var(--line); border-radius: var(--radius-lg); background: var(--paper); box-shadow: var(--shadow-md); }
+.device { width: min(430px, calc(100vw - 32px)); height: min(860px, calc(100vh - 32px)); min-height: 640px; padding: 9px; border-radius: 48px; background: #172019; box-shadow: var(--shadow-lg), inset 0 0 0 1px #4d5a4d; }
+.device__screen { width: 100%; height: 100%; overflow-x: hidden; overflow-y: auto; border-radius: 39px; background: var(--cream); }
+.review-panel { width: 300px; max-height: min(720px, calc(100vh - 64px)); overflow: auto; padding: 24px; border: 1px solid var(--line); border-radius: var(--radius-lg); background: var(--paper); box-shadow: var(--shadow-md); }
+@media (max-width: 1120px) { .prototype-stage { grid-template-columns: minmax(280px, 1fr) minmax(390px, 430px); align-items: start; } .review-panel { grid-column: 1 / -1; width: min(720px, 100%); justify-self: center; max-height: none; } }
+@media (max-width: 719px) { .prototype-stage { display: flex; flex-direction: column; align-items: stretch; gap: 16px; padding: 16px; } .product-doc-panel { max-height: none; } .device { align-self: center; height: calc(100vh - 32px); } .review-panel { display: none; } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; } }
+.app-view, .home-screen, .onboarding { overflow: visible; min-width: 0; padding-bottom: calc(36px + env(safe-area-inset-bottom)); }
