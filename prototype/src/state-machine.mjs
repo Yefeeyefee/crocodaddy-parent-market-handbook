@@ -33,7 +33,7 @@ const PLANS = ["monthly", "quarterly", "annual"];
 export function createInitialState() {
   return {
     screen: "login",
-    homeState: "empty",
+    homeState: "ready",
     selectedPlan: "annual",
     parentFullAccess: true,
     paymentState: "idle",
@@ -52,7 +52,7 @@ export function createInitialState() {
 export function transition(state, event) {
   if (event.type === "SEND_CODE" && state.screen === "login") return { ...state, codeSent: true };
   if (event.type === "PHONE_VERIFIED") return { ...state, screen: "privacy", phone: event.phone };
-  if (event.type === "CONSENT_ACCEPTED") return { ...state, screen: "home", homeState: "empty" };
+  if (event.type === "CONSENT_ACCEPTED") return { ...state, screen: "home", homeState: "ready" };
   if (event.type === "NAVIGATE" && SCREENS.includes(event.screen)) return { ...state, screen: event.screen };
   if (event.type === "HOME_STATE_CHANGED" && HOME_STATES.includes(event.value)) {
     return { ...state, homeState: event.value };

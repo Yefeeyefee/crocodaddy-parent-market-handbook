@@ -36,8 +36,9 @@ function placeholderScreen(state) {
 
 function screenMarkup(state) {
   const isOnboarding = state.screen === "login" || state.screen === "privacy";
+  const isImmersive = isOnboarding || state.screen === "agent";
   const content = state.screen === "home" ? renderHome(state) : state.screen === "login" ? renderLogin(state) : state.screen === "privacy" ? renderPrivacy(state) : state.screen === "insight" ? renderInsight(state) : state.screen === "agent" ? renderAgent(state) : state.screen === "activity" ? renderActivity(state) : state.screen === "action" ? renderAction(state) : state.screen === "weekend" ? renderWeekend(state) : state.screen === "course" ? renderCourse(state) : state.screen === "course-lesson" ? renderCourseLesson(state) : state.screen === "notifications" ? renderNotifications(state) : state.screen === "family" ? renderFamily(state) : state.screen === "membership" ? renderMembership(state) : state.screen === "parent-growth" ? renderParentGrowth(state) : state.screen === "child-profile" ? renderChildProfile(state) : state.screen === "settings" ? renderSettings(state) : state.screen === "account-security" ? renderAccountSecurity(state) : state.screen === "notification-settings" ? renderNotificationSettings(state) : state.screen === "privacy-settings" ? renderPrivacySettings(state) : state.screen === "help-feedback" ? renderHelpFeedback(state) : placeholderScreen(state);
-  const nav = isOnboarding ? "" : primaryNav(state.screen);
+  const nav = isImmersive ? "" : primaryNav(state.screen);
   return `<div class="app-view app-view--${state.screen}" data-screen-id="${state.screen}">${content}${nav}</div>`;
 }
 

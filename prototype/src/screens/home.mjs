@@ -22,17 +22,18 @@ function statusBlock(homeState, data, state = {}) {
 
 function readyContent(data, state = {}) {
   return `<section class="ready-content" aria-label="小宇最近 7 天的成长">
+    <div class="home-ready-state" role="status" aria-label="首页数据已就绪"><span class="home-ready-dot" aria-hidden="true"></span><strong>数据已就绪</strong><span>最近 7 天已更新</span></div>
     ${renderActivitySummaryCard(state)}
     <article class="parent-action"><div class="action-icon" aria-hidden="true">${icon("M20 14a4 4 0 0 1-4 4H9l-5 3v-7a4 4 0 0 1-1-2.7V7a4 4 0 0 1 4-4h9a4 4 0 0 1 4 4v7Z")}</div><div><div class="summary-label">和孩子一起</div><h3>今晚只聊一个小问题</h3><p>${data.action}</p></div>${icon("M9 18l6-6-6-6")}</article>
     <section class="home-module-grid" aria-label="继续陪伴">
       <button class="home-module-card home-module-card--weekend" data-action="NAVIGATE" data-screen="weekend"><span class="module-glyph" aria-hidden="true">↗</span><span class="module-copy"><span class="summary-label">本周陪伴建议</span><strong>周末去哪儿，帮你先想好</strong><span>城市自然博物馆 · 半天 · 室内</span><em>查看安排 ${icon("M5 12h14M12 5l7 7-7 7")}</em></span></button>
-      <button class="home-module-card home-module-card--course" data-action="NAVIGATE" data-screen="course"><span class="module-glyph" aria-hidden="true">◒</span><span class="module-copy"><span class="summary-label">本月定制课</span><strong>把好奇心变成自己的问题</strong><span>4 周 · 6 节音频 · 配图同步</span><em>打开课程 ${icon("M5 12h14M12 5l7 7-7 7")}</em></span></button>
+      <button class="home-module-card home-module-card--course" data-action="NAVIGATE" data-screen="course"><span class="module-glyph" aria-hidden="true">◒</span><span class="module-copy"><span class="summary-label">本月定制课</span><strong>把好奇心变成自己的问题</strong><span>4 周 · 6 节音频课 · 图片随声音播放</span><em>打开课程 ${icon("M5 12h14M12 5l7 7-7 7")}</em></span></button>
     </section>
   </section>`;
 }
 
 export function renderHome(state = {}) {
-  const homeState = states[state.homeState] ? state.homeState : "empty";
+  const homeState = states[state.homeState] ? state.homeState : "ready";
   const data = states[homeState];
   return `<main class="home-screen" data-screen="home" data-home-state="${homeState}">
     <header class="home-header"><div><p class="eyebrow">${escapeHTML(state.childName || "小宇")}的家长空间</p><h1>早上好</h1></div><button class="icon-button" aria-label="打开通知" data-action="NAVIGATE" data-screen="notifications">${icon("M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9ZM10 21h4")}</button></header>

@@ -16,7 +16,7 @@ function courseArt(art = "starlight", compact = false) {
 function lessonRow(lesson, { completed = false, currentId = "" } = {}) {
   const current = currentId === lesson.id;
   const stateLabel = current ? "正在看" : completed && lesson.id === "starlight" ? "已听" : arrow();
-  return `<button class="course-lesson-row${current ? " course-lesson-row--current" : ""}" data-action="COURSE_LESSON_OPEN" data-lesson-id="${lesson.id}"${current ? ' aria-current="true"' : ""}><span class="lesson-number">${lesson.number}</span>${courseArt(lesson.art, true)}<span class="lesson-copy"><strong>${lesson.title}</strong><span>${lesson.mentor} · ${lesson.duration} · ${lesson.pageCount} 页课件</span></span><span class="lesson-state" aria-hidden="true">${stateLabel}</span></button>`;
+  return `<button class="course-lesson-row${current ? " course-lesson-row--current" : ""}" data-action="COURSE_LESSON_OPEN" data-lesson-id="${lesson.id}"${current ? ' aria-current="true"' : ""}><span class="lesson-number">${lesson.number}</span>${courseArt(lesson.art, true)}<span class="lesson-copy"><strong>${lesson.title}</strong><span>${lesson.mentor} · ${lesson.duration}</span></span><span class="lesson-state" aria-hidden="true">${stateLabel}</span></button>`;
 }
 
 export function renderCourse(state = {}) {
@@ -25,9 +25,7 @@ export function renderCourse(state = {}) {
     <header class="app-view__header"><div><p class="eyebrow">${data.month} · 小宇的专属安排</p><h1>本月定制课</h1></div><button class="icon-button" aria-label="返回首页" data-action="GO_BACK">${icon("M15 18 9 12l6-6")}</button></header>
     <section class="course-hero" aria-labelledby="course-title"><div class="course-hero-copy"><span class="course-kicker">${data.stats[0]} · ${data.stats[1]}</span><h2 id="course-title">${data.title}</h2><p>${data.subtitle}</p><div class="course-stat-row">${data.stats.map((stat) => `<span>${stat}</span>`).join("")}</div></div>${courseArt("starlight")}</section>
     <section class="course-profile" aria-label="课程定制依据"><div><p class="section-label">为什么是这套课</p><p class="key-body">${data.reason}</p></div><div class="profile-tags">${data.profileTags.map((tag) => `<span>${tag}</span>`).join("")}</div></section>
-    <div class="course-format-note">${icon("M12 3v18M3 12h18")}<span><strong>多页音频课件</strong> 每节 40–50 页，旁白贯穿播放，课件画面跟着音频进度展开。</span></div>
     <section class="course-plan" aria-label="四周课程安排">${data.weeks.map((week) => `<section class="course-week"><div class="week-heading"><div><span class="week-label">${week.label}</span><h2>${week.title}</h2></div><span class="week-focus">${week.focus}</span></div><div class="course-lesson-list">${week.lessons.map((lesson) => lessonRow(lesson, { completed: state.courseCompleted })).join("")}</div></section>`).join("")}</section>
-    <p class="course-privacy-note">课程只使用家长授权的成长摘要和偏好，不展示孩子的对话原文。</p>
   </main>`;
 }
 
@@ -43,9 +41,8 @@ export function renderCourseLesson(state = {}) {
     <section class="lesson-courseware" aria-labelledby="lesson-title">
       <div class="lesson-slide" data-current-page="${currentPage}" data-page-count="${pageCount}"><div class="lesson-slide__visual">${courseArt(lesson.art)}</div><div class="lesson-slide__meta"><span>课件画面</span><strong>第 ${currentPage} / ${pageCount} 页</strong></div></div>
       <div class="lesson-courseware__copy"><span class="lesson-duration">${lesson.mentor} · ${lesson.duration}</span><h2 id="lesson-title">${lesson.title}</h2><p>${status}</p></div>
-      <div class="audio-player" aria-label="旁白播放控制"><div class="audio-player__label"><span>旁白</span><span>${completed ? "已播放完" : playing ? "播放中" : "未播放"}</span></div><div class="audio-progress"><span style="width: ${completed ? "100%" : playing ? "28%" : "0%"}"></span></div><div class="audio-time"><span>${playing || completed ? "01:24" : "00:00"}</span><span>${lesson.duration}</span></div><button class="play-button" data-action="COURSE_PLAY_TOGGLED" aria-label="${playing ? "暂停播放" : "开始播放"}" aria-pressed="${playing}">${playing ? pause() : play()}<span>${playing ? "暂停播放" : "开始播放"}</span></button><p class="lesson-audio-note">旁白和课件页同步播放</p></div>
+      <div class="audio-player" aria-label="旁白播放控制"><div class="audio-player__label"><span>旁白</span><span>${completed ? "已播放完" : playing ? "播放中" : "未播放"}</span></div><div class="audio-progress"><span style="width: ${completed ? "100%" : playing ? "28%" : "0%"}"></span></div><div class="audio-time"><span>${playing || completed ? "01:24" : "00:00"}</span><span>${lesson.duration}</span></div><button class="play-button" data-action="COURSE_PLAY_TOGGLED" aria-label="${playing ? "暂停播放" : "开始播放"}" aria-pressed="${playing}">${playing ? pause() : play()}<span>${playing ? "暂停播放" : "开始播放"}</span></button></div>
     </section>
     <section class="lesson-course-list" aria-label="本月课程列表"><div class="lesson-course-list__header"><div><p class="section-label">本月课程列表</p><h2>继续听哪一节？</h2></div><span>${allLessons().length} 节</span></div><div class="course-lesson-list course-lesson-list--embedded">${SCENARIOS.course.weeks.flatMap((week) => week.lessons).map((item) => lessonRow(item, { completed, currentId: lesson.id })).join("")}</div></section>
-    <p class="course-privacy-note">课程只使用家长授权的成长摘要和偏好，不展示孩子的对话原文。</p>
   </main>`;
 }

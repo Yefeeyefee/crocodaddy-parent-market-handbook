@@ -40,6 +40,11 @@ export function createAppController({
   }
   function dispatch(event, { direct = false, focusIdentity: identity = null } = {}) {
     if (event.type === "GO_BACK") {
+      if (state.screen === "agent") {
+        navigationHistory = [];
+        render({ ...state, screen: "home" }, 0, { focusTitle: true });
+        return state;
+      }
       const result = popScreenTransition(navigationHistory);
       navigationHistory = result.history;
       if (result.entry) render(result.entry.state, result.entry.scrollTop, { focusTitle: true });
