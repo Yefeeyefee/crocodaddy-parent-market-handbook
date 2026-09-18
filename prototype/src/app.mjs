@@ -1,4 +1,4 @@
-import { createAppController } from "./app-controller.mjs";
+import { createAppController } from "./app-controller.mjs?v=20260918-3";
 
 const root = document.querySelector("#app");
 const reviewRoot = document.querySelector("#review-panel");
