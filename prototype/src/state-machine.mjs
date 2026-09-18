@@ -91,7 +91,7 @@ export function transition(state, event) {
   if (event.type === "ACTION_SAVED" && state.screen === "agent") return { ...state, screen: "action", actionSaved: true };
   if (event.type === "ACTION_FEEDBACK" && state.screen === "action" && ACTION_FEEDBACK.includes(event.feedback)) return { ...state, screen: "action", actionFeedback: event.feedback };
   if (event.type === "WEEKEND_FEEDBACK" && state.screen === "weekend" && WEEKEND_FEEDBACK.includes(event.feedback)) return { ...state, weekendFeedback: event.feedback };
-  if (event.type === "COURSE_LESSON_OPEN" && state.screen === "course" && COURSE_LESSON_IDS.includes(event.lessonId)) {
+  if (event.type === "COURSE_LESSON_OPEN" && (state.screen === "course" || state.screen === "course-lesson") && COURSE_LESSON_IDS.includes(event.lessonId)) {
     return { ...state, screen: "course-lesson", courseLessonId: event.lessonId, coursePlaying: false, courseCompleted: false };
   }
   if (event.type === "COURSE_PLAY_TOGGLED" && state.screen === "course-lesson") return { ...state, coursePlaying: !state.coursePlaying };

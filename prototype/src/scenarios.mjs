@@ -189,15 +189,15 @@ export const SCENARIOS = {
     subtitle: "给小宇的 4 周通识小旅程",
     reason: "这套课根据小宇的年龄、好奇心和最近更常提出猜想的学习线索组合。",
     profileTags: ["年龄 10 岁", "兴趣 星空", "性格 好奇", "喜欢先猜一猜"],
-    stats: ["4 周", "6 节音频", "每节 6–10 分钟"],
+    stats: ["4 周", "6 节音频课件", "每节 40–50 页"],
     weeks: [
       {
         label: "第 1 周",
         title: "时间为什么会走？",
         focus: "观察与提问",
         lessons: [
-          { id: "starlight", number: "01", title: "星光要走多久才到我们这里？", duration: "06:40", mentor: "猫头鹰老师", visual: "星空观察图", art: "starlight" },
-          { id: "shadow-clock", number: "02", title: "影子会不会帮我们记时间？", duration: "07:10", mentor: "鼹鼠老师", visual: "影子计时图", art: "shadow" },
+          { id: "starlight", number: "01", title: "星光要走多久才到我们这里？", duration: "06:40", pageCount: 50, mentor: "猫头鹰老师", visual: "星空观察图", art: "starlight" },
+          { id: "shadow-clock", number: "02", title: "影子会不会帮我们记时间？", duration: "07:10", pageCount: 44, mentor: "鼹鼠老师", visual: "影子计时图", art: "shadow" },
         ],
       },
       {
@@ -205,7 +205,7 @@ export const SCENARIOS = {
         title: "答案从哪里来？",
         focus: "证据与表达",
         lessons: [
-          { id: "question-map", number: "03", title: "把一个大问题拆成三小步", duration: "08:20", mentor: "鳄鱼爸爸", visual: "问题地图", art: "map" },
+          { id: "question-map", number: "03", title: "把一个大问题拆成三小步", duration: "08:20", pageCount: 42, mentor: "鳄鱼爸爸", visual: "问题地图", art: "map" },
         ],
       },
       {
@@ -213,7 +213,7 @@ export const SCENARIOS = {
         title: "如果答案不一样？",
         focus: "比较与判断",
         lessons: [
-          { id: "moon-note", number: "04", title: "月亮每天都在变吗？", duration: "06:55", mentor: "猫头鹰老师", visual: "月相记录图", art: "moon" },
+          { id: "moon-note", number: "04", title: "月亮每天都在变吗？", duration: "06:55", pageCount: 48, mentor: "猫头鹰老师", visual: "月相记录图", art: "moon" },
         ],
       },
       {
@@ -221,8 +221,8 @@ export const SCENARIOS = {
         title: "把发现讲给别人听",
         focus: "复盘与表达",
         lessons: [
-          { id: "time-capsule", number: "05", title: "给未来的自己留一段声音", duration: "09:00", mentor: "兔子老师", visual: "声音胶囊图", art: "capsule" },
-          { id: "family-sky", number: "06", title: "和家人一起画一张天空地图", duration: "08:10", mentor: "鳄鱼爸爸", visual: "家庭共创图", art: "family" },
+          { id: "time-capsule", number: "05", title: "给未来的自己留一段声音", duration: "09:00", pageCount: 40, mentor: "兔子老师", visual: "声音胶囊图", art: "capsule" },
+          { id: "family-sky", number: "06", title: "和家人一起画一张天空地图", duration: "08:10", pageCount: 46, mentor: "鳄鱼爸爸", visual: "家庭共创图", art: "family" },
         ],
       },
     ],

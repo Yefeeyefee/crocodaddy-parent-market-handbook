@@ -1,4 +1,4 @@
-import { createAppController } from "./app-controller.mjs?v=20260918-4";
+import { createAppController } from "./app-controller.mjs?v=20260918-5";
 
 const root = document.querySelector("#app");
 const productDocRoot = document.querySelector("#product-doc-panel");

@@ -10,7 +10,7 @@ export const SCREEN_LABELS = Object.freeze({
   action: "行动建议",
   weekend: "周末建议",
   course: "本月定制课",
-  "course-lesson": "音频课",
+  "course-lesson": "音频绘本课件",
   notifications: "通知",
   family: "我的",
   membership: "会员方案",
@@ -51,8 +51,8 @@ const PAYMENT_REVIEW_OPTIONS = [
 
 const COURSE_REVIEW_OPTIONS = [
   ["not-started", "尚未开始", "课程已打开，但家长或孩子还没有开始播放。"],
-  ["playing", "正在播放", "音频正在播放，配图与当前音频段保持同步。"],
-  ["completed", "已经完成", "本节音频已经完成，允许留下这次学习记录。"],
+  ["playing", "正在播放", "旁白正在播放，课件页跟随当前音频段展开。"],
+  ["completed", "已经完成", "本节旁白已经播放完，课件停在最后一页。"],
 ];
 
 const REVIEW_OPTIONS = Object.freeze({
@@ -87,7 +87,7 @@ const STATUS_DOCS = {
     error: { label: "暂时无法同步", tone: "attention", description: "活动数据暂时无法更新，页面应保留清晰的恢复入口。", development: ["错误态仍展示安全缓存或原因说明，不把同步失败变成空白页。"], acceptance: ["家长能分辨‘暂无活动’和‘暂时无法同步’。"] },
   },
   membership: Object.fromEntries(PAYMENT_REVIEW_OPTIONS.map(([value, label, description]) => [value, { label, tone: value === "success" ? "positive" : value === "processing" || value === "syncing" ? "waiting" : value === "failed" || value === "cancelled" ? "attention" : "neutral", description, development: ["支付状态必须对应明确的按钮、权益提示和下一步。"], acceptance: ["状态切换后，家长能知道是否扣款、权益是否生效以及下一步做什么。"] }])),
-  "course-lesson": Object.fromEntries(COURSE_REVIEW_OPTIONS.map(([value, label, description]) => [value, { label, tone: value === "completed" ? "positive" : value === "playing" ? "waiting" : "neutral", description, development: ["音频、播放进度、配图和完成记录必须保持同一节课的状态。"], acceptance: ["播放、暂停和完成后，按钮文案与左侧说明保持一致。"] }])),
+  "course-lesson": Object.fromEntries(COURSE_REVIEW_OPTIONS.map(([value, label, description]) => [value, { label, tone: value === "completed" ? "positive" : value === "playing" ? "waiting" : "neutral", description, development: ["旁白、课件页、页码和课程列表必须保持同一节课的状态。"], acceptance: ["未播放、播放中和已播放完三种情况都能被看懂。"] }])),
 };
 
 const BASE_DOCS = {
@@ -149,17 +149,17 @@ const BASE_DOCS = {
   },
   course: {
     purpose: "按孩子年龄、性格、爱好给出一套每月定制的音频主课程。",
-    functionItems: ["浏览月度课程安排", "查看课程定制依据", "打开一节音频课"],
-    explanationItems: ["课程以音频为主，配图帮助家长和孩子一起听、指认和讨论。"],
-    developmentItems: ["月度课程要标注年龄、兴趣和性格依据，且每节课都有时长。"],
+    functionItems: ["浏览月度课程安排", "查看课程定制依据", "打开一节多页音频课件"],
+    explanationItems: ["每节课由 40–50 张连续课件页组成，旁白和画面是同一个课件。"],
+    developmentItems: ["月度课程要标注年龄、兴趣和性格依据，且每节课都有时长和页数。"],
     acceptanceItems: ["课程列表能让家长理解为什么是这套课，并能顺畅进入播放页。"],
   },
   "course-lesson": {
-    purpose: "让家长在一个安静、明确的页面里播放一节定制音频课。",
-    functionItems: ["开始或暂停音频", "查看配图提示", "标记本节完成"],
-    explanationItems: ["配图不是装饰，而是帮助家长在关键问题出现时与孩子一起指一指、猜一猜。"],
-    developmentItems: ["播放进度、配图提示和完成动作必须对应当前课程，不串课。"],
-    acceptanceItems: ["未开始、播放中、已完成三种状态都能被看懂。"],
+    purpose: "让家长在同一个课件页里看到连续画面、播放旁白，并随时切换本月课程。",
+    functionItems: ["查看当前课件画面和页码", "暂停或继续旁白", "在同一页切换本月课程"],
+    explanationItems: ["一节课由多张连续课件页组成，旁白贯穿播放；图片和声音是同一个课件。"],
+    developmentItems: ["课件页、页码、音频进度和课程列表必须绑定同一节课。"],
+    acceptanceItems: ["页面不出现额外提示或完成按钮；切换课程后仍停留在课件页。"],
   },
   notifications: {
     purpose: "让家长只接收到与家庭成长有关、值得查看的提醒。",
