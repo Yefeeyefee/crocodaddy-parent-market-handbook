@@ -26,6 +26,7 @@ export const PAYMENT_STATES = ["idle", "processing", "success", "cancelled", "fa
 export const ACTION_FEEDBACK = ["remind", "not-fit", "change"];
 export const WEEKEND_FEEDBACK = ["remind", "not-fit", "change"];
 export const COURSE_LESSON_IDS = ["starlight", "shadow-clock", "question-map", "moon-note", "time-capsule", "family-sky"];
+export const COURSE_STATES = ["not-started", "playing", "completed"];
 export const ACTIVITY_STATES = ["initializing", "empty", "ready", "stale", "error"];
 const PLANS = ["monthly", "quarterly", "annual"];
 
@@ -83,6 +84,9 @@ export function transition(state, event) {
   }
   if (event.type === "PAYMENT_STATE_CHANGED" && PAYMENT_STATES.includes(event.value)) {
     return { ...state, paymentState: event.value };
+  }
+  if (event.type === "COURSE_STATE_CHANGED" && COURSE_STATES.includes(event.value)) {
+    return { ...state, coursePlaying: event.value === "playing", courseCompleted: event.value === "completed" };
   }
   if (event.type === "ACTION_SAVED" && state.screen === "agent") return { ...state, screen: "action", actionSaved: true };
   if (event.type === "ACTION_FEEDBACK" && state.screen === "action" && ACTION_FEEDBACK.includes(event.feedback)) return { ...state, screen: "action", actionFeedback: event.feedback };

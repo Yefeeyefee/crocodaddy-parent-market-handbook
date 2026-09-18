@@ -1,4 +1,5 @@
 import { ACTIVITY_STATES, HOME_STATES, PAYMENT_STATES, SCREENS } from "./state-machine.mjs";
+import { getProductDoc, getReviewStateOptions, SCREEN_LABELS } from "./product-docs.mjs";
 import { renderHome } from "./screens/home.mjs";
 import { renderLogin, renderPrivacy } from "./screens/onboarding.mjs";
 import { renderInsight } from "./screens/insight.mjs";
@@ -14,7 +15,6 @@ import { renderParentGrowth } from "./screens/parent-growth.mjs";
 import { renderChildProfile } from "./screens/child-profile.mjs";
 import { renderAccountSecurity, renderHelpFeedback, renderNotificationSettings, renderPrivacySettings, renderSettings } from "./screens/settings.mjs";
 
-const labels = { login: "登录", privacy: "隐私说明", home: "今日陪伴", insight: "成长洞察", agent: "鳄鱼爸爸", activity: "最近 7 天成长", action: "行动建议", weekend: "周末建议", course: "本月定制课", "course-lesson": "音频课", notifications: "通知", family: "我的", membership: "会员方案", "parent-growth": "家长成长", "child-profile": "孩子资料", settings: "设置", "account-security": "账号与安全", "notification-settings": "通知与活动建议", "privacy-settings": "隐私与授权", "help-feedback": "帮助与反馈" };
 const icon = `<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>`;
 const navItems = [
   ["首页", "home", "M3 11l9-8 9 8v9H3z"],
@@ -30,7 +30,7 @@ function primaryNav(activeScreen) {
 }
 
 function placeholderScreen(state) {
-  const title = labels[state.screen] || state.screen;
+  const title = SCREEN_LABELS[state.screen] || state.screen;
   return `<section class="screen-stack"><div class="card"><h2>${title}还在搭建中</h2><p class="key-body">这是后续业务 screen 的入口。家长咨询和家庭设置会继续遵守双方内容隔离。</p><button class="button button--primary" data-action="NAVIGATE" data-screen="home">回到首页 ${icon}</button></div></section>`;
 }
 
@@ -41,6 +41,23 @@ function screenMarkup(state) {
   return `<div class="app-view app-view--${state.screen}" data-screen-id="${state.screen}">${content}${nav}</div>`;
 }
 
+function escapeHTML(value = "") {
+  return String(value).replace(/[&<>"']/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[character]));
+}
+
+function listMarkup(items) {
+  return `<ul>${items.map((item) => `<li>${escapeHTML(item)}</li>`).join("")}</ul>`;
+}
+
+function reviewOptionsMarkup(options, currentValue) {
+  return options.map(({ value, label, description }) => `<option value="${escapeHTML(value)}" title="${escapeHTML(description)}" ${value === currentValue ? "selected" : ""}>${escapeHTML(label)}</option>`).join("");
+}
+
+function reviewGroup({ legend, action, ariaLabel, options, value }) {
+  const current = options.find((option) => option.value === value) || options[0];
+  return `<fieldset class="review-group"><legend>${escapeHTML(legend)}</legend><select class="review-select" data-action="${escapeHTML(action)}" aria-label="${escapeHTML(ariaLabel)}">${reviewOptionsMarkup(options, value)}</select><p class="review-current-state"><strong>当前情况：</strong>${escapeHTML(current?.label || "未选择")} · ${escapeHTML(current?.description || "请先选择一种情况")}</p></fieldset>`;
+}
+
 export function renderApp(root, state, { focusTitle = false } = {}) {
   if (!root) throw new Error("renderApp requires a root element");
   if (!SCREENS.includes(state.screen)) throw new Error(`Unknown screen: ${state.screen}`);
@@ -49,10 +66,17 @@ export function renderApp(root, state, { focusTitle = false } = {}) {
   if (focusTitle) title?.focus?.({ preventScroll: true });
 }
 
+export function renderProductDocPanel(state) {
+  const doc = getProductDoc(state);
+  return `<div id="product-doc-content" class="product-doc" data-doc-screen="${escapeHTML(state.screen)}" data-doc-state="${escapeHTML(doc.stateValue)}" aria-live="polite"><header class="product-doc__header"><div><p class="eyebrow">核心产品文档</p><h2>${escapeHTML(doc.moduleLabel)}</h2></div><span class="product-doc__state product-doc__state--${escapeHTML(doc.stateTone)}">${escapeHTML(doc.stateLabel)}</span></header><section class="product-doc__status product-doc__status--${escapeHTML(doc.stateTone)}"><p class="section-label">当前状态说明</p><strong>${escapeHTML(doc.stateLabel)}</strong><p>${escapeHTML(doc.stateDescription)}</p></section><section class="product-doc__purpose"><p class="section-label">核心目标</p><p>${escapeHTML(doc.purpose)}</p></section><section class="product-doc__section"><h3><span>01</span>产品功能</h3>${listMarkup(doc.functionItems)}</section><section class="product-doc__section"><h3><span>02</span>产品说明</h3>${listMarkup(doc.explanationItems)}</section><section class="product-doc__section product-doc__section--dev"><h3><span>03</span>开发要求</h3>${listMarkup(doc.developmentItems)}</section><section class="product-doc__section product-doc__section--acceptance"><h3><span>04</span>状态与验收</h3>${listMarkup(doc.acceptanceItems)}</section><p class="product-doc__footer">左侧说明与手机界面、右侧状态控制保持同步。</p></div>`;
+}
+
 export function renderReviewPanel(state) {
-  const screenOptions = SCREENS.map((screen) => `<option value="${screen}" ${screen === state.screen ? "selected" : ""}>${labels[screen]}</option>`).join("");
-  const homeOptions = HOME_STATES.map((value) => `<option value="${value}" ${value === state.homeState ? "selected" : ""}>${value}</option>`).join("");
-  const activityOptions = ACTIVITY_STATES.map((value) => `<option value="${value}" ${value === state.activityState ? "selected" : ""}>${value}</option>`).join("");
-  const paymentOptions = PAYMENT_STATES.map((value) => `<option value="${value}" ${value === state.paymentState ? "selected" : ""}>${value}</option>`).join("");
-  return `<div><p class="eyebrow">REVIEW CONSOLE</p><h2>原型评审控制台</h2><p>仅桌面视图显示，不进入手机画布。</p><section class="review-l3-entry"><strong>L3 · 及时支持</strong><p>独立评审入口，不与普通通知混排。</p></section><fieldset class="review-group"><legend>屏幕切换</legend><select class="review-select" data-action="NAVIGATE" aria-label="选择屏幕">${screenOptions}</select></fieldset><fieldset class="review-group"><legend>首页六状态</legend><select class="review-select" data-action="HOME_STATE_CHANGED" aria-label="选择首页状态">${homeOptions}</select></fieldset><fieldset class="review-group"><legend>活动数据状态</legend><select class="review-select" data-action="ACTIVITY_STATE_CHANGED" aria-label="选择活动数据状态">${activityOptions}</select></fieldset><fieldset class="review-group"><legend>支付结果</legend><select class="review-select" data-action="PAYMENT_STATE_CHANGED" aria-label="选择支付结果">${paymentOptions}</select></fieldset></div>`;
+  const screenOptions = SCREENS.map((screen) => ({ value: screen, label: SCREEN_LABELS[screen], description: `打开${SCREEN_LABELS[screen]}模块。` }));
+  const homeOptions = getReviewStateOptions("home");
+  const activityOptions = getReviewStateOptions("activity");
+  const paymentOptions = getReviewStateOptions("payment");
+  const courseOptions = getReviewStateOptions("course");
+  const courseValue = state.courseCompleted === true ? "completed" : state.coursePlaying === true ? "playing" : "not-started";
+  return `<div class="review-console"><p class="eyebrow">交互评审</p><h2>原型评审控制台</h2><p>右侧切换后，左侧产品文档会同步解释当前情况。</p><section class="review-l3-entry"><strong>状态对照</strong><p>面向研发、运营和产品的共同阅读，不需要理解内部状态名称。</p></section>${reviewGroup({ legend: "进入模块", action: "NAVIGATE", ariaLabel: "选择模块", options: screenOptions, value: state.screen })}${reviewGroup({ legend: "首页成长摘要", action: "HOME_STATE_CHANGED", ariaLabel: "选择首页成长摘要状态", options: homeOptions, value: state.homeState })}${reviewGroup({ legend: "最近 7 天活动数据", action: "ACTIVITY_STATE_CHANGED", ariaLabel: "选择最近 7 天活动数据状态", options: activityOptions, value: state.activityState })}${reviewGroup({ legend: "会员支付结果", action: "PAYMENT_STATE_CHANGED", ariaLabel: "选择会员支付结果", options: paymentOptions, value: state.paymentState })}${reviewGroup({ legend: "课程播放情况", action: "COURSE_STATE_CHANGED", ariaLabel: "选择课程播放情况", options: courseOptions, value: courseValue })}</div>`;
 }

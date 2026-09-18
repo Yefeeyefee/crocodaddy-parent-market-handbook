@@ -1,9 +1,0 @@
-:root {
-  --ink: #183126; --ink-soft: #425a4c; --muted: #6f7b71; --brand: #56723c; --brand-deep: #304f35;
-  --sage: #dfe8d2; --cream: #f6f4ea; --paper: #fffef9; --gold: #e7b75d; --line: #dfe6da; --danger: #9b453c;
-  --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px; --space-5: 20px; --space-6: 24px; --space-8: 32px;
-  --touch-target: 44px; --radius-sm: 10px; --radius-md: 18px; --radius-lg: 30px;
-  --shadow-sm: 0 3px 10px rgb(38 62 45 / 8%); --shadow-md: 0 12px 28px rgb(38 62 45 / 12%); --shadow-lg: 0 24px 54px rgb(38 62 45 / 18%);
-  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif;
-  --font-size-body-key: 16px;
-}

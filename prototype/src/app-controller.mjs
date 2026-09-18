@@ -1,16 +1,18 @@
 import { createInitialState, transition } from "./state-machine.mjs";
-import { renderApp as defaultRenderApp, renderReviewPanel as defaultRenderReviewPanel } from "./render.mjs";
+import { renderApp as defaultRenderApp, renderProductDocPanel as defaultRenderProductDocPanel, renderReviewPanel as defaultRenderReviewPanel } from "./render.mjs";
 import { pushScreenTransition, popScreenTransition } from "./navigation-history.mjs";
 
 export function createAppController({
   root,
+  productDocRoot,
   reviewRoot,
   renderApp = defaultRenderApp,
+  renderProductDocPanel = defaultRenderProductDocPanel,
   renderReviewPanel = defaultRenderReviewPanel,
   transitionFn = transition,
   initialState = createInitialState(),
 } = {}) {
-  if (!root || !reviewRoot) throw new Error("createAppController requires root and reviewRoot");
+  if (!root || !productDocRoot || !reviewRoot) throw new Error("createAppController requires root, productDocRoot, and reviewRoot");
   let state = initialState;
   let navigationHistory = [];
   function scrollContainer() { return root.querySelector("[data-screen]") || root.querySelector(".onboarding") || root.parentElement; }
@@ -30,6 +32,7 @@ export function createAppController({
   function render(stateToRender, scrollTop = 0, { focusTitle = false, focusIdentity: identity = null } = {}) {
     state = stateToRender;
     renderApp(root, state, { focusTitle });
+    productDocRoot.innerHTML = renderProductDocPanel(state);
     reviewRoot.innerHTML = renderReviewPanel(state);
     const container = scrollContainer();
     if (container) container.scrollTop = scrollTop;
@@ -77,6 +80,7 @@ export function createAppController({
     if (action === "LOCATION_TOGGLED") return route({ type: "LOCATION_TOGGLED", enabled: control.dataset.enabled === "true" });
     if (action === "HOME_STATE_CHANGED") return route({ type: "HOME_STATE_CHANGED", value: control.value });
     if (action === "PAYMENT_STATE_CHANGED") return route({ type: "PAYMENT_STATE_CHANGED", value: control.value });
+    if (action === "COURSE_STATE_CHANGED") return route({ type: "COURSE_STATE_CHANGED", value: control.value });
     if (action === "TERMS_TOGGLED") return route({ type: "TERMS_TOGGLED", accepted: control.checked });
     if (action === "NOTIFICATIONS_TOGGLED") return route({ type: "NOTIFICATIONS_TOGGLED", enabled: control.dataset.enabled === "true" });
     if (action === "QUIET_HOURS_TOGGLED") return route({ type: "QUIET_HOURS_TOGGLED", enabled: control.dataset.enabled === "true" });
